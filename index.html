@@ -16,6 +16,18 @@
     <button onclick="activateXR()">Start Hello WebXR</button>
 
     <script>
+        navigator.xr.isSessionSupported("immersive-ar").then((allow) => {
+            if (allow === false) {
+                // Expect: When EnterAR(true) wont working, show this. 
+                document.body.innerText = `AR not supported`;
+            }
+        });
+
+         if (navigator.xr === undefined) {
+            // Expect: When EnterAR(true) wont working, or show this.
+            document.body.innerText = `XR not supported`;
+        }
+
         async function activateXR() {
             // Add a canvas element and initialize a WebGL context that is compatible with WebXR.
             const canvas = document.createElement("canvas");
