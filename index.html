@@ -69,7 +69,7 @@
         //     posCamera.innerHTML = `Camera:<br>latitude: ${e.detail.position.latitude}<br>longitude: ${e.detail.position.longitude}`
         // });
 
-        const mult = 10
+        const mult = 100
 
         function createBox(latitude, longitude) {
             if (testEntityAdded) return
@@ -87,10 +87,12 @@
             });
 
             entity.setAttribute('position', {
-                x: latitude * mult,
+                x: (latitude * mult),
                 y: 0,
-                z: longitude * mult
+                z: (longitude * mult) - 50
             });
+
+            document.querySelector("a-scene").appendChild(entity);
 
             posBlock.innerHTML = `Block:<br>latitude: ${latitude * mult}<br>longitude: ${longitude * mult}`
 
