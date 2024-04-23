@@ -2,78 +2,65 @@
 <html>
 
 <head>
-    <meta charset="utf-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <title>Location-based AR.js demo</title>
-    <script src="https://aframe.io/releases/1.0.4/aframe.min.js"></script>
-    <script src="https://unpkg.com/aframe-look-at-component@0.8.0/dist/aframe-look-at-component.min.js"></script>
-    <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar-nft.js"></script>
+    <title>AR.js A-Frame Location-based</title>
+    <script src="https://aframe.io/releases/1.3.0/aframe.min.js"></script>
+    <script type='text/javascript'
+        src='https://raw.githack.com/AR-js-org/AR.js/master/three.js/build/ar-threex-location-only.js'></script>
+    <script type='text/javascript'
+        src='https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar.js'></script>
+    <style>
+        .pos-block, .pos-camera {
+            left: 0;
+            bottom: 0;
+            position: fixed;
+        }
+    </style>
 </head>
 
-<body style="margin: 0; overflow: hidden;">
-    <!-- <a-scene vr-mode-ui="enabled: false" embedded arjs="sourceType: webcam; debugUIEnabled: false;">
-        <a-text value="This content will always face you." look-at="[gps-new-camera]" scale="10 10 10"></a-text>
-        <a-box color="tomato" depth="1" height="1" width="1" position="0 1 -5"></a-box>
-        <a-camera rotation-reader></a-camera>
-    </a-scene> -->
-    <!-- vr-mode-ui="enabled: false" embedded arjs="sourceType: webcam; debugUIEnabled: true;" -->
-
-    <a-scene vr-mode-ui="enabled: false" embedded arjs="sourceType: webcam; debugUIEnabled: true;">
-        <a-entity camera wasd-controls look-controls rotation-reader></a-entity>
-        <a-entity geometry="primitive: box; height: 0.2; width: 0.2 depth: 0.2" position="0 0 -1" material="color: gray;"></a-entity>
+<body>
+    <a-scene vr-mode-ui='enabled: false' arjs='sourceType: webcam; videoTexture: true; debugUIEnabled: false'
+        renderer='antialias: true; alpha: true'>
+        <a-camera gps-new-camera='gpsMinDistance: 5'></a-camera>
     </a-scene>
+
+    <div class="pos-block"></div>
+    <div class="pos-camera"></div>
 </body>
 
 </html>
 
 <script>
-    AFRAME.registerComponent('rotation-reader', {
-        /**
-         * We use IIFE (immediately-invoked function expression) to only allocate one
-         * vector or euler and not re-create on every tick to save memory.
-         */
-        tick: (function () {
-            const position = new THREE.Vector3();
-            const quaternion = new THREE.Quaternion();
+    window.onload = () => {
+        let testEntityAdded = false;
 
-            alert(`${position.x} ${position.y} ${position.z}`)
+        const el = document.querySelector("[gps-new-camera]");
+        const posBlock = document.querySelector('.pos-block')
+        const posCamera = document.querySelector('.pos-camera')
 
-            return function () {
-                this.el.object3D.getWorldPosition(position);
-                this.el.object3D.getWorldQuaternion(quaternion);
-                // position and rotation now contain vector and quaternion in world space.
-            };
-        })()
-    });
+        el.addEventListener("gps-camera-update-position", e => {
+            if (!testEntityAdded) {
+                alert(`Got first GPS position: lon ${e.detail.position.longitude} lat ${e.detail.position.latitude}`);
+                // Add a box to the north of the initial GPS position
+                const entity = document.createElement("a-box");
+                entity.setAttribute("scale", {
+                    x: 20,
+                    y: 20,
+                    z: 20
+                });
+                entity.setAttribute('material', { color: 'red' });
+                entity.setAttribute('gps-new-entity-place', {
+                    latitude: e.detail.position.latitude + 0.001,
+                    longitude: e.detail.position.longitude
+                });
 
+                posBlock.innerHTML = `Block:<br>latitude: ${e.detail.position.latitude + 0.001}<br>${e.detail.position.longitude}`
 
-    // window.onload = () => {
-    //     let testEntityAdded = false;
+                document.querySelector("a-scene").appendChild(entity);
 
-    //     const el = document.querySelector("[gps-new-camera]");
+            }
+            testEntityAdded = true;
 
-    //     el.addEventListener("gps-camera-update-position", e => {
-    //         if (!testEntityAdded) {
-    //             alert(`Got first GPS position: lon ${e.detail.position.longitude} lat ${e.detail.position.latitude}`);
-    //             // Add a box to the north of the initial GPS position
-    //             const entity = document.createElement("a-box");
-    //             entity.setAttribute("scale", {
-    //                 x: 20,
-    //                 y: 20,
-    //                 z: 20
-    //             });
-    //             entity.setAttribute('material', { color: 'red' });
-    //             entity.setAttribute('gps-new-entity-place', {
-    //                 latitude: e.detail.position.latitude + 0.001,
-    //                 longitude: e.detail.position.longitude
-    //             });
-
-    //             // el.setAttribute('position', `${e.detail.position.latitude} 0 ${e.detail.position.longitude}`)
-    //             // entity.setAttribute('position', `${e.detail.position.latitude + 5} 0 ${e.detail.position.longitude}`);
-
-    //             document.querySelector("a-scene").appendChild(entity);
-    //         }
-    //         testEntityAdded = true;
-    //     });
-    // }
+            posCamera.innerHTML = `Camera:<br>latitude: ${e.detail.position.latitude}<br>${e.detail.position.longitude}`
+        });
+    };
 </script>
