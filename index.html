@@ -9,7 +9,7 @@
     <script type='text/javascript'
         src='https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar.js'></script>
     <style>
-        .pos-block, .pos-camera {
+        .pos {
             left: 0;
             bottom: 0;
             position: fixed;
@@ -23,8 +23,10 @@
         <a-camera gps-new-camera='gpsMinDistance: 5'></a-camera>
     </a-scene>
 
-    <div class="pos-block"></div>
-    <div class="pos-camera"></div>
+    <div class="pos">
+        <div class="pos-block"></div>
+        <div class="pos-camera"></div>
+    </div>
 </body>
 
 </html>
@@ -53,14 +55,14 @@
                     longitude: e.detail.position.longitude
                 });
 
-                posBlock.innerHTML = `Block:<br>latitude: ${e.detail.position.latitude + 0.001}<br>${e.detail.position.longitude}`
+                posBlock.innerHTML = `Block:<br>latitude: ${e.detail.position.latitude + 0.001}<br>longitude: ${e.detail.position.longitude}`
 
                 document.querySelector("a-scene").appendChild(entity);
 
             }
             testEntityAdded = true;
 
-            posCamera.innerHTML = `Camera:<br>latitude: ${e.detail.position.latitude}<br>${e.detail.position.longitude}`
+            posCamera.innerHTML = `Camera:<br>latitude: ${e.detail.position.latitude}<br>longitude: ${e.detail.position.longitude}`
         });
     };
 </script>
