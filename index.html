@@ -12,15 +12,15 @@
 
 <body style="margin: 0; overflow: hidden;">
     <a-scene vr-mode-ui="enabled: false" embedded arjs="sourceType: webcam; debugUIEnabled: false;">
-        <a-text value="This content will always face you." look-at="[gps-camera]" scale="10 10 10"></a-text>
-        <a-camera gps-camera rotation-reader> </a-camera>
+        <a-text value="This content will always face you." look-at="[gps-new-camera]" scale="10 10 10"></a-text>
+        <a-camera gps-new-camera rotation-reader> </a-camera>
     </a-scene>
 </body>
 
 </html>
 
 <script>
-    const el = document.querySelector("[gps-camera]");
+    const el = document.querySelector("[gps-new-camera]");
 
     el.addEventListener("gps-camera-update-position", e => {
         if (!testEntityAdded) {
