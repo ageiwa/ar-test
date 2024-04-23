@@ -42,7 +42,7 @@
                 // });
 
                 el.setAttribute('position', `${e.detail.position.latitude} 0 ${e.detail.position.longitude}`)
-                entity.setAttribute('position', `${e.detail.position.latitude + 0.001} 0 ${e.detail.position.longitude}`);
+                entity.setAttribute('position', `${e.detail.position.latitude + 5} 0 ${e.detail.position.longitude}`);
 
                 document.querySelector("a-scene").appendChild(entity);
             }
@@ -51,7 +51,7 @@
 
         const options = {
             enableHighAccuracy: true,
-            timeout: 1500,
+            timeout: 5000,
             maximumAge: 0,
         }
 
@@ -73,6 +73,6 @@
 
         setInterval(() => {
             navigator.geolocation.getCurrentPosition(success, error, options);
-        }, 1500)
+        }, 5000)
     };
 </script>
