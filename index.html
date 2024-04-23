@@ -11,12 +11,9 @@
 </head>
 
 <body>
-    <a-scene
-        vr-mode-ui='enabled: false'
-        arjs='sourceType: webcam; videoTexture: true; debugUIEnabled: false'
-        renderer='antialias: true; alpha: true'
-    >
-        <a-camera gps-new-camera='gpsMinDistance: 1'></a-camera>
+    <a-scene vr-mode-ui='enabled: false' arjs='sourceType: webcam; videoTexture: true; debugUIEnabled: false'
+        renderer='antialias: true; alpha: true'>
+        <a-camera></a-camera>
     </a-scene>
 </body>
 
@@ -28,11 +25,7 @@
 
         const el = document.querySelector("[gps-new-camera]");
 
-        // console.log(el.getAttributes())
-
         el.addEventListener("gps-camera-update-position", e => {
-            // alert('Update camera pos')
-
             if (!testEntityAdded) {
                 alert(`Got first GPS position: lon ${e.detail.position.longitude} lat ${e.detail.position.latitude}`);
                 // Add a box to the north of the initial GPS position
@@ -43,13 +36,43 @@
                     z: 20
                 });
                 entity.setAttribute('material', { color: 'red' });
-                entity.setAttribute('gps-new-entity-place', {
-                    latitude: e.detail.position.latitude,
-                    longitude: e.detail.position.longitude
-                });
+                // entity.setAttribute('gps-new-entity-place', {
+                //     latitude: e.detail.position.latitude,
+                //     longitude: e.detail.position.longitude
+                // });
+
+                el.setAttribute('position', `${e.detail.position.latitude} 0 ${e.detail.position.longitude}`)
+                entity.setAttribute('position', `${e.detail.position.latitude + 0.001} 0 ${e.detail.position.longitude}`);
+
                 document.querySelector("a-scene").appendChild(entity);
             }
             testEntityAdded = true;
         });
+
+        const options = {
+            enableHighAccuracy: true,
+            timeout: 1500,
+            maximumAge: 0,
+        }
+
+        function success(pos) {
+            const crd = pos.coords;
+
+            // console.log("Your current position is:")
+            // console.log(`Latitude : ${crd.latitude}`)
+            // console.log(`Longitude: ${crd.longitude}`)
+            // console.log(`More or less ${crd.accuracy} meters.`)
+
+            el.setAttribute('position', `${crd.latitude} 0 ${crd.longitude}`)
+        }
+
+        function error(err) {
+            // console.warn(`ERROR(${err.code}): ${err.message}`);
+            alert(`ERROR(${err.code}): ${err.message}`)
+        }
+
+        setInterval(() => {
+            navigator.geolocation.getCurrentPosition(success, error, options);
+        }, 1500)
     };
 </script>
