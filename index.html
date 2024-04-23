@@ -79,11 +79,19 @@
             const crd = pos.coords;
 
             posPos.innerHTML = `Your current position:<br>latitude: ${crd.latitude}<br>longitude: ${crd.longitude}<br>accuracy: ${crd.accuracy}`
+            
+            setTimeout(() => {
+                navigator.geolocation.getCurrentPosition(success, error, options);
+            }, 5000)
         }
 
         function error(err) {
             // console.warn(`ERROR(${err.code}): ${err.message}`);
             alert(`ERROR(${err.code}): ${err.message}`)
+
+            setTimeout(() => {
+                navigator.geolocation.getCurrentPosition(success, error, options);
+            }, 5000)
         }
 
         navigator.geolocation.getCurrentPosition(success, error, options);
