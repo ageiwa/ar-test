@@ -25,7 +25,10 @@
 
     <div class="pos">
         <div class="pos-block"></div>
+        <br>
         <div class="pos-camera"></div>
+        <br>
+        <div class="pos-pos"></div>
     </div>
 </body>
 
@@ -38,6 +41,7 @@
         const el = document.querySelector("[gps-new-camera]");
         const posBlock = document.querySelector('.pos-block')
         const posCamera = document.querySelector('.pos-camera')
+        const posPos = document.querySelector('.pos-pos')
 
         el.addEventListener("gps-camera-update-position", e => {
             if (!testEntityAdded) {
@@ -64,5 +68,24 @@
 
             posCamera.innerHTML = `Camera:<br>latitude: ${e.detail.position.latitude}<br>longitude: ${e.detail.position.longitude}`
         });
+
+        const options = {
+            enableHighAccuracy: true,
+            timeout: 5000,
+            maximumAge: 0,
+        };
+
+        function success(pos) {
+            const crd = pos.coords;
+
+            posPos.innerHTML = `Your current position:<br>latitude: ${crd.latitude}<br>longitude: ${crd.longitude}<br>accuracy: ${crd.accuracy}`
+        }
+
+        function error(err) {
+            // console.warn(`ERROR(${err.code}): ${err.message}`);
+            alert(`ERROR(${err.code}): ${err.message}`)
+        }
+
+        navigator.geolocation.getCurrentPosition(success, error, options);
     };
 </script>
