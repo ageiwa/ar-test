@@ -14,13 +14,33 @@
     <a-scene vr-mode-ui="enabled: false" embedded arjs="sourceType: webcam; debugUIEnabled: false;">
         <!-- <a-text value="This content will always face you." look-at="[gps-new-camera]" scale="10 10 10"></a-text> -->
         <a-box color="tomato" depth="1" height="1" width="1" position="0 1 -5"></a-box>
-        <a-camera look-controls rotation-reader></a-camera>
+        <a-camera rotation-reader></a-camera>
     </a-scene>
 </body>
 
 </html>
 
 <script>
+    AFRAME.registerComponent('rotation-reader', {
+        /**
+         * We use IIFE (immediately-invoked function expression) to only allocate one
+         * vector or euler and not re-create on every tick to save memory.
+         */
+        tick: (function () {
+            const position = new THREE.Vector3();
+            const quaternion = new THREE.Quaternion();
+
+            alert(`${position.x} ${position.y} ${position.z}`)
+
+            return function () {
+                this.el.object3D.getWorldPosition(position);
+                this.el.object3D.getWorldQuaternion(quaternion);
+                // position and rotation now contain vector and quaternion in world space.
+            };
+        })()
+    });
+
+
     // window.onload = () => {
     //     let testEntityAdded = false;
 
