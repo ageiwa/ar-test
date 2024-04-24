@@ -236,8 +236,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		const matrix1 = coordsToMatrix(newX, newY);
 
 		const mArray = Array.from(matrix)
-		mArray[12] = newX * 1000
-		mArray[14] = newY * 1000
+		mArray[12] = newX * 10
+		mArray[14] = newY * 10
 
 		let newFlower = arObject.clone();
 		newFlower.visible = true;
