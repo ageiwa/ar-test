@@ -164,33 +164,52 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	// Adds a new object to the scene at the
 	// specified transform.
 	function addARObjectAt(matrix) {
-		const vec4 = {
-			x: 1,
-			y: 0,
-			z: 1,
-			w: 1
-		}
+		// const vec4 = {
+		// 	x: 1,
+		// 	y: 0,
+		// 	z: 1,
+		// 	w: 1
+		// }
 
-		const mat4 = [
-			0, 0, 0, 0,
-			0, 0, 0, 0,
-			0, 0, 0, 0,
-			0, 0, 0, 0
-		]
+		// const mat4 = [
+		// 	0, 0, 0, 0,
+		// 	0, 0, 0, 0,
+		// 	0, 0, 0, 0,
+		// 	0, 0, 0, 0
+		// ]
 
-		mat4[0] = vec4.x
-		mat4[4] = vec4.y
-		mat4[8] = vec4.z
-		mat4[12] = vec4.w
+		// mat4[0] = vec4.x
+		// mat4[4] = vec4.y
+		// mat4[8] = vec4.z
+		// mat4[12] = vec4.w
 
 		// console.log(matrix)
 		// console.log(new Float32Array(mat4))
 
-		console.log(viewerPose)
+		// console.log(viewerPose)
+
+		function coordsToMatrix(x, y) {
+			const matrix = [
+				1, 0, 0, x,
+				0, 1, 0, y,
+				0, 0, 1, 0,
+				0, 0, 0, 1
+			];
+
+			return Float32Array.from(matrix);
+		}
+
+		// Пример использования
+		const x = 2; // Пример координаты x
+		const y = 2; // Пример координаты y
+
+		const matrix = coordsToMatrix(x, y);
+
+		console.log(matrix);
 
 		let newFlower = arObject.clone();
 		newFlower.visible = true;
-		newFlower.matrix = viewerPose.transform.matrix;
+		newFlower.matrix = matrix;
 		scene.addNode(newFlower);
 
 		console.log(newFlower);
