@@ -182,12 +182,15 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		mat4[8] = vec4.z
 		mat4[12] = vec4.w
 
-		console.log(matrix)
-		console.log(new Float32Array(mat4))
+		// console.log(matrix)
+		// console.log(new Float32Array(mat4))
+
+		let viewerPose = frame.getViewerPose(xrViewerSpace)
+		console.log(viewerPose)
 
 		let newFlower = arObject.clone();
 		newFlower.visible = true;
-		newFlower.matrix = new Float32Array(mat4);
+		newFlower.matrix = viewerPose.transform.matrix;
 		scene.addNode(newFlower);
 
 		console.log(newFlower);
@@ -241,9 +244,6 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		session.requestAnimationFrame(onXRFrame);
 
 		// console.log(session.requestGeoAlignment())
-
-		let viewerPose = frame.getViewerPose(xrViewerSpace)
-		// console.log(viewerPose)
 
 		scene.drawXRFrame(frame, pose);
 
