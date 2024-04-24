@@ -168,6 +168,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		newFlower.matrix = matrix;
 		scene.addNode(newFlower);
 
+		console.log(newFlower);
+
 		flowers.push(newFlower);
 
 		// For performance reasons if we add too many objects start
@@ -178,6 +180,9 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 			scene.removeNode(oldFlower);
 		}
 	}
+
+	// 51.66551
+	// 39.19901
 
 	let rayOrigin = vec3.create();
 	let rayDirection = vec3.create();
