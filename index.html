@@ -62,6 +62,10 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	let xrHitTestSource = null;
 	let viewerPose = null
 
+	let myX = null
+	let myY = null
+	let myMatrix = null
+
 	// WebGL scene globals.
 	let gl = null;
 	let renderer = null;
@@ -91,6 +95,39 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	// Ensure the background is transparent for AR.
 	scene.clear = false;
 
+	async function getMyPosition() {
+		return new Promise((res, rej) => {
+			const options = {
+				enableHighAccuracy: true,
+				timeout: 5000,
+				maximumAge: 0,
+			};
+
+			function success(pos) {
+				const crd = pos.coords;
+
+				res(crd.latitude, crd.longitude)
+			}
+
+			function error(err) {
+				rej(err)
+			}
+
+			navigator.geolocation.getCurrentPosition(success, error, options);
+		})
+	}
+
+	function latLonToXY(latitude, longitude) {
+		const radius = 6371;
+		const phi = (90 - latitude) * Math.PI / 180;
+		const theta = (360 - longitude) * Math.PI / 180;
+
+		const x = radius * Math.sin(phi) * Math.cos(theta);
+		const y = radius * Math.cos(phi);
+
+		return { x, y };
+	}
+
 	function initXR() {
 		xrButton = new WebXRButton({
 			onRequestSession: onRequestSession,
@@ -109,7 +146,16 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		}
 	}
 
-	function onRequestSession() {
+	async function onRequestSession() {
+		const { lat, lng } = await getMyPosition()
+
+		const { x, y } = latLonToXY(lat, lng);
+		const matrix1 = coordsToMatrix(x, y);
+
+		myX = x
+		myY = y
+		myMatrix = matrix1
+
 		return navigator.xr.requestSession('immersive-ar', { requiredFeatures: ['local', 'hit-test'] })
 			.then((session) => {
 				xrButton.setSession(session);
@@ -164,30 +210,6 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	// Adds a new object to the scene at the
 	// specified transform.
 	function addARObjectAt(matrix) {
-		// const vec4 = {
-		// 	x: 1,
-		// 	y: 0,
-		// 	z: 1,
-		// 	w: 1
-		// }
-
-		// const mat4 = [
-		// 	0, 0, 0, 0,
-		// 	0, 0, 0, 0,
-		// 	0, 0, 0, 0,
-		// 	0, 0, 0, 0
-		// ]
-
-		// mat4[0] = vec4.x
-		// mat4[4] = vec4.y
-		// mat4[8] = vec4.z
-		// mat4[12] = vec4.w
-
-		// console.log(matrix)
-		// console.log(new Float32Array(mat4))
-
-		// console.log(viewerPose)
-
 		function coordsToMatrix(x, y) {
 			const matrix = [
 				1, 0, 0, x,
@@ -200,12 +222,16 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		}
 
 		// Пример использования
-		const x = 2; // Пример координаты x
-		const y = 2; // Пример координаты y
 
-		const matrix1 = coordsToMatrix(x, y);
+		const lat = 51.66551
+		const lng = 39.19901
 
-		console.log(matrix1);
+		const { x, y } = latLonToXY(lat, lng);
+
+		const newX = myX - x
+		const newY = myY - y
+
+		const matrix1 = coordsToMatrix(newX, newY);
 
 		let newFlower = arObject.clone();
 		newFlower.visible = true;
@@ -224,9 +250,6 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 			scene.removeNode(oldFlower);
 		}
 	}
-
-	// 51.66551
-	// 39.19901
 
 	let rayOrigin = vec3.create();
 	let rayDirection = vec3.create();
