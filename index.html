@@ -128,6 +128,17 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		return { x, y };
 	}
 
+	function coordsToMatrix(x, y) {
+		const matrix = [
+			1, 0, 0, x,
+			0, 1, 0, y,
+			0, 0, 1, 0,
+			0, 0, 0, 1
+		];
+
+		return Float32Array.from(matrix);
+	}
+
 	function initXR() {
 		xrButton = new WebXRButton({
 			onRequestSession: onRequestSession,
@@ -210,19 +221,6 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	// Adds a new object to the scene at the
 	// specified transform.
 	function addARObjectAt(matrix) {
-		function coordsToMatrix(x, y) {
-			const matrix = [
-				1, 0, 0, x,
-				0, 1, 0, y,
-				0, 0, 1, 0,
-				0, 0, 0, 1
-			];
-
-			return Float32Array.from(matrix);
-		}
-
-		// Пример использования
-
 		const lat = 51.66551
 		const lng = 39.19901
 
