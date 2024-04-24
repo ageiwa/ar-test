@@ -60,6 +60,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	let xrRefSpace = null;
 	let xrViewerSpace = null;
 	let xrHitTestSource = null;
+	let viewerPose = null
 
 	// WebGL scene globals.
 	let gl = null;
@@ -185,7 +186,6 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		// console.log(matrix)
 		// console.log(new Float32Array(mat4))
 
-		let viewerPose = frame.getViewerPose(xrViewerSpace)
 		console.log(viewerPose)
 
 		let newFlower = arObject.clone();
@@ -227,6 +227,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		let pose = frame.getViewerPose(xrRefSpace);
 
 		reticle.visible = false;
+
+		viewerPose = pose
 
 		// If we have a hit test source, get its results for the frame
 		// and use the pose to display a reticle in the scene.
