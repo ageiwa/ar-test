@@ -233,7 +233,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		const newX = myX - x
 		const newY = myY - y
 
-		const matrix1 = coordsToMatrix(newX * 1000, newY * 1000);
+		const matrix1 = coordsToMatrix(newX, newY);
 
 		let newFlower = arObject.clone();
 		newFlower.visible = true;
