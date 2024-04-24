@@ -121,7 +121,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	}
 
 	function latLonToXY(latitude, longitude) {
-		const radius = 6371;
+		// const radius = 6371;
+		const radius = 6371000
 		const phi = (90 - latitude) * Math.PI / 180;
 		const theta = (360 - longitude) * Math.PI / 180;
 
