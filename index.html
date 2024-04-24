@@ -28,8 +28,8 @@ degrees from your real location.
 </a-scene> -->
 
 <a-scene vr-mode-ui='enabled: false' arjs='sourceType: webcam; videoTexture: true; debugUIEnabled: false' renderer='antialias: true; alpha: true'>
-    <a-text value='This will always face the user.' look-at='[gps-new-camera]' gps-new-entity-place="latitude: 51.05; longitude: -0.723" scale="50 50 50"></a-entity>    
     <a-camera gps-new-camera='gpsMinDistance: 5 simulateLatitude: 51.049; simulateLongitude: -0.723'></a-camera>
+    <a-text value='This will always face the user.' look-at='[gps-new-camera]' gps-new-entity-place="latitude: 51.05; longitude: -0.723" scale="50 50 50"></a-entity>    
 </a-scene>
 	
 </body>
