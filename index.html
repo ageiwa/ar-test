@@ -235,9 +235,13 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 		const matrix1 = coordsToMatrix(newX, newY);
 
+		const mArray = Array.from(matrix)
+		mArray[3] = newX
+		mArray[11] = newY
+
 		let newFlower = arObject.clone();
 		newFlower.visible = true;
-		newFlower.matrix = matrix1;
+		newFlower.matrix = Float32Array.from(mArray);
 		scene.addNode(newFlower);
 
 		console.log(myX, myY, '|', x, y)
