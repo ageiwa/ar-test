@@ -236,8 +236,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		const matrix1 = coordsToMatrix(newX, newY);
 
 		const mArray = Array.from(matrix)
-		mArray[3] = newX
-		mArray[11] = newY
+		mArray[12] = newX
+		mArray[14] = newY
 
 		let newFlower = arObject.clone();
 		newFlower.visible = true;
@@ -289,7 +289,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 				reticle.visible = true;
 				reticle.matrix = pose.transform.matrix;
 
-				console.log(pose.transform.matrix)
+				// console.log(pose.transform.matrix)
 			}
 		}
 
