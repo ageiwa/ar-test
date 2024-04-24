@@ -163,9 +163,28 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	// Adds a new object to the scene at the
 	// specified transform.
 	function addARObjectAt(matrix) {
+		const vec4 = {
+			x: 1,
+			y: 0,
+			z: 1,
+			w: 1
+		}
+
+		const mat4 = [
+			0, 0, 0, 0,
+			0, 0, 0, 0,
+			0, 0, 0, 0,
+			0, 0, 0, 0
+		]
+
+		mat4[0] = vec4.x
+		mat4[4] = vec4.y
+		mat4[8] = vec4.z
+		mat4[12] = vec4.w
+
 		let newFlower = arObject.clone();
 		newFlower.visible = true;
-		newFlower.matrix = matrix;
+		newFlower.matrix = new Float32Array(mat4);
 		scene.addNode(newFlower);
 
 		console.log(newFlower);
