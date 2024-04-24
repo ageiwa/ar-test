@@ -182,6 +182,9 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		mat4[8] = vec4.z
 		mat4[12] = vec4.w
 
+		console.log(matrix)
+		console.log(new Float32Array(mat4))
+
 		let newFlower = arObject.clone();
 		newFlower.visible = true;
 		newFlower.matrix = new Float32Array(mat4);
