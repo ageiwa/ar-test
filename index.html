@@ -205,6 +205,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 				let pose = hitTestResults[0].getPose(xrRefSpace);
 				reticle.visible = true;
 				reticle.matrix = pose.transform.matrix;
+
+				console.log(pose)
 			}
 		}
 
@@ -212,7 +214,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 		session.requestAnimationFrame(onXRFrame);
 
-		console.log(session.requestGeoAlignment())
+		// console.log(session.requestGeoAlignment())
 
 		scene.drawXRFrame(frame, pose);
 
