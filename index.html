@@ -2,12 +2,8 @@
 <html>
 
 <head>
-    <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
+     <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
     <script src="https://libs.zappar.com/zappar-aframe/2.0.0/zappar-aframe.js"></script>
-    <script type='text/javascript'
-        src='https://raw.githack.com/AR-js-org/AR.js/master/three.js/build/ar-threex-location-only.js'></script>
-    <script type='text/javascript'
-        src='https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar.js'></script>
 
     <meta charset="utf-8" />
     <title>Zappar for A-Frame: Instant Tracking 3D Model Example</title>
@@ -19,86 +15,56 @@
             width: 100%;
             height: 100%;
         }
+
+        #zappar-placement-ui {
+            position: absolute;
+            bottom: 30px;
+            width: 200px;
+            left: calc(50% - 100px);
+
+            background-color: rgba(0, 0, 0, 0.8);
+            color: white;
+            text-align: center;
+            font-family: sans-serif;
+            padding: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
     </style>
 </head>
 
 <body>
     <a-scene>
+        <!-- Ask user for camera permissions, display some text if permission is denied -->
         <a-entity zappar-permissions-ui id="permissions"></a-entity>
+        <!-- shows a full-page dialog that informs the user they're using an unsupported browser -->
         <a-entity zappar-compatibility-ui id="compatibility"></a-entity>
 
-        <a-camera zappar-camera gps-new-camera='gpsMinDistance: 5' />
+        <a-camera zappar-camera />
 
-        <a-entity zappar-instant="placement-mode: false" id="instant-tracker">
+        <!-- Setup our instant tracker and start it in placement mode so the user can -->
+        <!-- choose a location for the object -->
+        <a-entity zappar-instant="placement-mode: true" id="instant-tracker">
+
+            <!-- Include a 3D model inside our instant tracker -->
+            <a-entity gltf-model="url(assets/waving.glb)"></a-entity>
 
         </a-entity>
     </a-scene>
 
+    <!-- Some UI for the user to tap to indicate they're happy with the placement -->
+    <div id="zappar-placement-ui">Tap here to place the object</div>
+
     <script>
-        const options = {
-            enableHighAccuracy: true,
-            timeout: 1000,
-            maximumAge: 0
-        }
-
-        const camera = document.querySelector('[gps-new-camera]')
-
-        const urlParams = new URLSearchParams(window.location.search)
-        const latitude = urlParams.get('latitude')
-        const longitude = urlParams.get('longitude')
-
-        if (latitude !== null && longitude !== null) {
-            createBox(
-                parseFloat(latitude),
-                parseFloat(longitude)
-            )
-        }
-
-        let idPos = null
-
-        function createBox(latitude, longitude) {
-            const instantTracker = document.querySelector('#instant-tracker')
-
-            instantTracker.setAttribute('gps-new-entity-place', {
-                latitude: latitude,
-                longitude: longitude
-            })
-
-            const box = document.createElement('a-box')
-
-            box.setAttribute('material', {
-                color: 'red'
-            })
-
-            box.setAttribute('scale', {
-                x: 20,
-                y: 20,
-                z: 20
-            })
-
-            instantTracker.appendChild(box)
-        }
-
-        function success(pos) {
-            const crd = pos.coords
-
-            camera.setAttribute('gps-new-entity-place', {
-                latitude: crd.latitude,
-                longitude: crd.longitude
-            })
-
-            navigator.geolocation.clearWatch(idPos)
-        }
-
-        function error() {
-            // setTimeout(getPosition, 5000)
-        }
-
-        idPos = navigator.geolocation.watchPosition(
-            success,
-            error,
-            options
-        )
+        // Listen for when the user taps the UI
+        const placementUI = document.getElementById("zappar-placement-ui");
+        placementUI.addEventListener("click", function() {
+            // Set placement mode to false on our instant tracker
+            const instantTracker = document.getElementById("instant-tracker");
+            instantTracker.setAttribute("zappar-instant", "placement-mode: false");
+            // And remove the placement UI
+            placementUI.remove();
+        });
     </script>
 </body>
 
