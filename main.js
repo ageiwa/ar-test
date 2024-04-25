@@ -42,7 +42,10 @@ const longitude = urlParams.get('longitude')
 console.log(latitude, longitude)
 
 if (latitude !== null && longitude !== null) {
-    createBox(latitude, longitude)
+    createBox(
+        parseFloat(latitude),
+        parseFloat(longitude)
+    )
 }
 
 function createBox(latitude, longitude) {
@@ -90,6 +93,8 @@ function success(pos) {
 }
 
 function error() {
+    alert('error')
+
     setTimeout(getPosition, 5000)
 }
 
