@@ -92,3 +92,5 @@ function success(pos) {
 function error() {
     setTimeout(getPosition, 5000)
 }
+
+getPosition()
