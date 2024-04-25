@@ -41,6 +41,8 @@ const longitude = urlParams.get('longitude')
 
 console.log(latitude, longitude)
 
+alert(`${latitude} ${longitude}`)
+
 if (latitude !== null && longitude !== null) {
     createBox(
         parseFloat(latitude),
