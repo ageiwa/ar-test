@@ -53,6 +53,8 @@
         )
     }
 
+    let idPos = null
+
     function createBox(latitude, longitude) {
         const entity = document.createElement('a-box')
 
@@ -76,14 +78,6 @@
         posBlock.innerHTML = `Block:<br>latitude: ${latitude}<br>longitude: ${longitude}`
     }
 
-    function getPosition() {
-        navigator.geolocation.getCurrentPosition(
-            success,
-            error,
-            options
-        )
-    }
-
     function success(pos) {
         const crd = pos.coords
 
@@ -94,14 +88,22 @@
             longitude: crd.longitude
         })
 
-        setTimeout(getPosition, 5000)
+        // setTimeout(getPosition, 5000)
+
+        // if (target.latitude === crd.latitude && target.longitude === crd.longitude) {
+        //     console.log("Congratulations, you reached the target");
+        //     navigator.geolocation.clearWatch(id);
+        // }
     }
 
     function error() {
-        setTimeout(getPosition, 5000)
+        // setTimeout(getPosition, 5000)
     }
 
-    getPosition()
+    idPos = navigator.geolocation.watchPosition(
+        success,
+        error,
+        options
+    )
 </script>
-
 </html>
