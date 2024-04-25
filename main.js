@@ -89,6 +89,8 @@ function success(pos) {
         longitude: crd.longitude
     })
 
+    alert(`${crd.latitude} ${crd.longitude}`)
+
     setTimeout(getPosition, 5000)
 }
 
