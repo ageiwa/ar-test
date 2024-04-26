@@ -48,25 +48,25 @@
         const acl__y = document.querySelector('.acl__y')
         const acl__z = document.querySelector('.acl__z')
 
-        acl__x.textContent = `x: ${e.acceleration.x}`
-        acl__y.textContent = `y: ${e.acceleration.y}`
-        acl__z.textContent = `z: ${e.acceleration.z}`
+        acl__x.textContent = `x: ${e.acceleration.x.toFixed(2)}`
+        acl__y.textContent = `y: ${e.acceleration.y.toFixed(2)}`
+        acl__z.textContent = `z: ${e.acceleration.z.toFixed(2)}`
 
         const aclgr__x = document.querySelector('.aclgr__x')
         const aclgr__y = document.querySelector('.aclgr__y')
         const aclgr__z = document.querySelector('.aclgr__z')
 
-        aclgr__x.textContent = `x: ${e.accelerationIncludingGravity.x}`
-        aclgr__y.textContent = `y: ${e.accelerationIncludingGravity.y}`
-        aclgr__z.textContent = `z: ${e.accelerationIncludingGravity.z}`
+        aclgr__x.textContent = `x: ${e.accelerationIncludingGravity.x.toFixed(2)}`
+        aclgr__y.textContent = `y: ${e.accelerationIncludingGravity.y.toFixed(2)}`
+        aclgr__z.textContent = `z: ${e.accelerationIncludingGravity.z.toFixed(2)}`
 
         const rot__alpha = document.querySelector('.rot__alpha')
         const rot__beta = document.querySelector('.rot__beta')
         const rot__gamma = document.querySelector('.rot__gamma')
 
-        rot__alpha.textContent = `alpha: ${e.rotationRate.alpha}`
-        rot__beta.textContent = `beta: ${e.rotationRate.beta}`
-        rot__gamma.textContent = `gamma: ${e.rotationRate.gamma}`
+        rot__alpha.textContent = `alpha: ${e.rotationRate.alpha.toFixed(2)}`
+        rot__beta.textContent = `beta: ${e.rotationRate.beta.toFixed(2)}`
+        rot__gamma.textContent = `gamma: ${e.rotationRate.gamma.toFixed(2)}`
     })
 
 </script>
