@@ -1,23 +1,72 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
 </head>
+
 <body>
-    
+    <div class="acl">
+        <p>acceleration</p>
+
+        <span class="acl__x"></span>
+        <span class="acl__y"></span>
+        <span class="acl__z"></span>
+    </div>
+
+    <div class="aclgr">
+        <p>accelerationIncludingGravity</p>
+
+        <span class="aclgr__x"></span>
+        <span class="aclgr__y"></span>
+        <span class="aclgr__z"></span>
+    </div>
+
+    <div class="rot">
+        <p>rotationRate</p>
+
+        <span class="rot__alpha"></span>
+        <span class="rot__beta"></span>
+        <span class="rot__gamma"></span>
+    </div>
 </body>
+
 </html>
 
 <script>
 
-// window.addEventListener('deviceorientation', (e) => {
-//     console.log(e)
-// })
+    // window.addEventListener('deviceorientation', (e) => {
+    //     console.log(e)
+    // })
 
-window.addEventListener('devicemotion', (e) => {
-  console.log(e)
-})
+    window.addEventListener('devicemotion', (e) => {
+        //   console.log(e)
+
+        const acl__x = document.querySelector('.acl__x')
+        const acl__y = document.querySelector('.acl__y')
+        const acl__z = document.querySelector('.acl__z')
+
+        acl__x.textContent = `x: ${e.acceleration.x}`
+        acl__y.textContent = `y: ${e.acceleration.y}`
+        acl__z.textContent = `z: ${e.acceleration.z}`
+
+        const aclgr__x = document.querySelector('.aclgr__x')
+        const aclgr__y = document.querySelector('.aclgr__y')
+        const aclgr__z = document.querySelector('.aclgr__z')
+
+        aclgr__x.textContent = `x: ${e.accelerationIncludingGravity.x}`
+        aclgr__y.textContent = `y: ${e.accelerationIncludingGravity.y}`
+        aclgr__z.textContent = `z: ${e.accelerationIncludingGravity.z}`
+
+        const rot__alpha = document.querySelector('.rot__alpha')
+        const rot__beta = document.querySelector('.rot__beta')
+        const rot__gamma = document.querySelector('.rot__gamma')
+
+        rot__alpha.textContent = `alpha: ${e.rotationRate.alpha}`
+        rot__beta.textContent = `beta: ${e.rotationRate.beta}`
+        rot__gamma.textContent = `gamma: ${e.rotationRate.gamma}`
+    })
 
 </script>
