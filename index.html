@@ -5,68 +5,105 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <script src="https://aframe.io/releases/1.3.0/aframe.min.js"></script>
+    <script type='text/javascript' src='https://raw.githack.com/AR-js-org/AR.js/master/three.js/build/ar-threex-location-only.js'></script>
+    <script type='text/javascript' src='https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar.js'></script>
+    <style>
+        .pos {
+            left: 0;
+            bottom: 0;
+            position: fixed;
+        }
+    </style>
 </head>
 
 <body>
-    <div class="acl">
-        <p>acceleration</p>
+    <a-scene vr-mode-ui='enabled: false' arjs='sourceType: webcam; videoTexture: true; debugUIEnabled: false' renderer='antialias: true; alpha: true'>
+        <a-camera gps-new-camera='gpsMinDistance: 5'></a-camera>
+    </a-scene>
 
-        <span class="acl__x"></span>
-        <span class="acl__y"></span>
-        <span class="acl__z"></span>
-    </div>
-
-    <div class="aclgr">
-        <p>accelerationIncludingGravity</p>
-
-        <span class="aclgr__x"></span>
-        <span class="aclgr__y"></span>
-        <span class="aclgr__z"></span>
-    </div>
-
-    <div class="rot">
-        <p>rotationRate</p>
-
-        <span class="rot__alpha"></span>
-        <span class="rot__beta"></span>
-        <span class="rot__gamma"></span>
+    <div class="pos">
+        <div class="pos-block"></div>
+        <br>
+        <div class="pos-camera"></div>
+        <br>
+        <div class="pos-gps"></div>
     </div>
 </body>
-
-</html>
-
 <script>
+    const options = {
+        enableHighAccuracy: true,
+        timeout: 1000,
+        maximumAge: 0
+    }
 
-    // window.addEventListener('deviceorientation', (e) => {
-    //     console.log(e)
-    // })
+    const camera = document.querySelector('[gps-new-camera]')
+    const posBlock = document.querySelector('.pos-block')
+    const posCamera = document.querySelector('.pos-camera')
+    const posGps = document.querySelector('.pos-gps')
 
-    window.addEventListener('devicemotion', (e) => {
-        //   console.log(e)
+    const urlParams = new URLSearchParams(window.location.search)
+    const latitude = urlParams.get('latitude')
+    const longitude = urlParams.get('longitude')
 
-        const acl__x = document.querySelector('.acl__x')
-        const acl__y = document.querySelector('.acl__y')
-        const acl__z = document.querySelector('.acl__z')
+    if (latitude !== null && longitude !== null) {
+        createBox(
+            parseFloat(latitude),
+            parseFloat(longitude)
+        )
+    }
 
-        acl__x.textContent = `x: ${e.acceleration.x.toFixed(2)}`
-        acl__y.textContent = `y: ${e.acceleration.y.toFixed(2)}`
-        acl__z.textContent = `z: ${e.acceleration.z.toFixed(2)}`
+    let idPos = null
 
-        const aclgr__x = document.querySelector('.aclgr__x')
-        const aclgr__y = document.querySelector('.aclgr__y')
-        const aclgr__z = document.querySelector('.aclgr__z')
+    function createBox(latitude, longitude) {
+        const box = document.createElement('a-box')
 
-        aclgr__x.textContent = `x: ${e.accelerationIncludingGravity.x.toFixed(2)}`
-        aclgr__y.textContent = `y: ${e.accelerationIncludingGravity.y.toFixed(2)}`
-        aclgr__z.textContent = `z: ${e.accelerationIncludingGravity.z.toFixed(2)}`
+        box.setAttribute('material', {
+            color: 'red'
+        })
 
-        const rot__alpha = document.querySelector('.rot__alpha')
-        const rot__beta = document.querySelector('.rot__beta')
-        const rot__gamma = document.querySelector('.rot__gamma')
+        box.setAttribute('scale', {
+            x: 5,
+            y: 5,
+            z: 5
+        })
 
-        rot__alpha.textContent = `alpha: ${e.rotationRate.alpha.toFixed(2)}`
-        rot__beta.textContent = `beta: ${e.rotationRate.beta.toFixed(2)}`
-        rot__gamma.textContent = `gamma: ${e.rotationRate.gamma.toFixed(2)}`
-    })
+        box.setAttribute('gps-new-entity-place', {
+            latitude: latitude,
+            longitude: longitude
+        })
 
+        document.querySelector('a-scene').appendChild(box)
+
+        posBlock.innerHTML = `Block:<br>latitude: ${latitude}<br>longitude: ${longitude}`
+    }
+
+    function success(pos) {
+        const crd = pos.coords
+
+        posGps.innerHTML = `Your current position:<br>latitude: ${crd.latitude}<br>longitude: ${crd.longitude}<br>accuracy: ${crd.accuracy}`
+
+        camera.setAttribute('gps-new-entity-place', {
+            latitude: crd.latitude,
+            longitude: crd.longitude
+        })
+
+        // setTimeout(getPosition, 5000)
+
+        // if (target.latitude === crd.latitude && target.longitude === crd.longitude) {
+        //     console.log("Congratulations, you reached the target");
+        //     navigator.geolocation.clearWatch(id);
+        // }
+    }
+
+    function error() {
+        // setTimeout(getPosition, 5000)
+    }
+
+    idPos = navigator.geolocation.watchPosition(
+        success,
+        error,
+        options
+    )
 </script>
+</html>
