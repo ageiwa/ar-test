@@ -19,7 +19,8 @@
 
 <body>
     <a-scene vr-mode-ui='enabled: false' arjs='sourceType: webcam; videoTexture: true; debugUIEnabled: false' renderer='antialias: true; alpha: true'>
-        <a-camera gps-new-camera='gpsMinDistance: 5'></a-camera>
+        <a-camera camera look-controls gps-new-camera='gpsMinDistance: 5'></a-camera>
+        <a-entity track-user-movement></a-entity>
     </a-scene>
 
     <div class="pos">
@@ -31,6 +32,13 @@
     </div>
 </body>
 <script>
+    AFRAME.registerComponent('track-user-movement', {
+        tick: function () {
+            let camera = this.el
+            let cameraPosition = camera.getAttribute('position');
+        }
+    })
+
     const options = {
         enableHighAccuracy: true,
         timeout: 1000,
@@ -45,6 +53,8 @@
     const urlParams = new URLSearchParams(window.location.search)
     const latitude = urlParams.get('latitude')
     const longitude = urlParams.get('longitude')
+
+    let setPosition = false
 
     if (latitude !== null && longitude !== null) {
         createBox(
@@ -83,10 +93,14 @@
 
         posGps.innerHTML = `Your current position:<br>latitude: ${crd.latitude}<br>longitude: ${crd.longitude}<br>accuracy: ${crd.accuracy}`
 
-        camera.setAttribute('gps-new-entity-place', {
-            latitude: crd.latitude,
-            longitude: crd.longitude
-        })
+        if (!setPosition) {
+            camera.setAttribute('gps-new-entity-place', {
+                latitude: crd.latitude,
+                longitude: crd.longitude
+            })
+        }
+
+        setPosition = true
 
         // setTimeout(getPosition, 5000)
 
