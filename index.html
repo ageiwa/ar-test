@@ -4,63 +4,81 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script src="./aframe.js"></script>
-    <script src="./ar.js"></script>
-    <title>Document</title>
-    <style>
-        .arjs-loader {
-            height: 100%;
-            width: 100%;
-            position: absolute;
-            top: 0;
-            left: 0;
-            background-color: rgba(0, 0, 0, 0.8);
-            z-index: 9999;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .arjs-loader div {
-            text-align: center;
-            font-size: 1.25em;
-            color: white;
-        }
-    </style>
+    <title>AR Page</title>
+    <script type="text/javascript" src="/aframe.min.js"></script>
+    <script type="text/javascript" src="/ar-threex-location-only.js"></script>
+    <script type="text/javascript" src="/aframe-ar.js"></script>
+    <script type="text/javascript" src="/aframe-look-at-component.min.js"></script>
 </head>
 
-<body style="margin : 0px; overflow: hidden;">
-
-    <div class="arjs-loader">
-        <div>Loading, please wait...</div>
-    </div>
-    <a-scene vr-mode-ui="enabled: false;" renderer="logarithmicDepthBuffer: true;" embedded
-        arjs="trackingMethod: best; sourceType: webcam;debugUIEnabled: false;">
-
-        <a-assets>
-            <video id="video" autoplay muted loop="true" src="./video.mp4"></video>
-        </a-assets>
-
-        <a-nft type="nft" url="./ar-test/marker" smooth="true" smoothCount="10" smoothTolerance=".01" smoothThreshold="5">
-            <!-- <a-entity gltf-model="/trex/scene.gltf" scale="5 5 5" position="50 150 0">
-            </a-entity> -->
-
-            <a-video src="#video" width="450" height="225" rotation="-90 0 0" position="150 0 -50"></a-video>
-
-            <!-- <a-box color="tomato" height="10" width="10" depth="10" scale="10 10 10"
-            position="-100 150 -100"></a-box> -->
-        </a-nft>
-        <a-entity camera></a-entity>
+<body>
+    <a-scene vr-mode-ui="enabled: false" arjs="sourceType: webcam; videoTexture: true; debugUIEnabled: false" renderer="antialias: true; alpha: true">
+        <a-camera gps-new-camera='gpsMinDistance: 5'></a-camera>
     </a-scene>
-
-    <!-- <a-scene embedded arjs>
-        <a-marker preset="hiro">
-
-            <a-entity position="0 0 0" scale="0.05 0.05 0.05"
-                gltf-model="/trex/scene.gltf"></a-entity>
-        </a-marker>
-        <a-entity camera></a-entity>
-    </a-scene> -->
 </body>
+
+<script>
+    let markersIsSet = false
+
+    const urlParams = new URLSearchParams(window.parent.location.search)
+    const latitude = urlParams.get('latitude')
+    const longitude = urlParams.get('longitude')
+    const stamps = urlParams.get('stamps')
+
+    function createBox({lat, long, stamp}) {
+        const marker = document.createElement('a-entity')
+        marker.setAttribute('gps-new-entity-place', {
+            latitude: lat,
+            longitude: long
+        })
+
+        marker.setAttribute('material', {
+            color: 'red'
+        })
+
+        marker.setAttribute('geometry', {
+            primitive: 'box'
+        })
+
+        marker.setAttribute('obj-model', {
+            obj: '/untitled.obj',
+            mtl: '/untitled.mtl'
+        })
+
+        if (stamp) {
+            const stampText = document.createElement('a-text')
+            stampText.setAttribute('align', 'center')
+            stampText.setAttribute('value', stamp)
+            stampText.setAttribute('color', '#fff')
+            stampText.setAttribute('baseline', 'top')
+            stampText.setAttribute('z-offset', '-10')
+            stampText.setAttribute('look-at', '[gps-new-camera]')
+            marker.appendChild(stampText)
+        }
+
+        document
+            .querySelector('a-scene')
+            .appendChild(marker)
+    }
+
+    const camera = document.querySelector('[gps-new-camera]')
+    camera.addEventListener('gps-camera-update-position', (e) => {
+        if (!markersIsSet && latitude !== null && longitude !== null) {
+            const latList = latitude.split(',')
+            const lngList = longitude.split(',')
+            const stmpList = stamps.split(',')
+
+            latList.forEach((_, i) => {
+                createBox({
+                    lat: parseFloat(latList[i]),
+                    long: parseFloat(lngList[i]),
+                    stamp: stmpList[i]
+                })
+            })
+        }
+
+        markersIsSet = true
+    })
+</script>
 
 </html>
